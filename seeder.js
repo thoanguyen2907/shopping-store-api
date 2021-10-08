@@ -1,6 +1,6 @@
 const fs            = require('fs');
 const mongoose      = require('mongoose');
-var colors          = require('colors');
+
 
 const pathConfig        = require('./path');
 global.__base           = __dirname + '/';
@@ -11,10 +11,9 @@ global.__path_configs   = __path_app + pathConfig.folder_configs + '/';
 const databaseConfig  = require(__path_configs + 'database');
 
 
-mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.password}@cluster0.omedx.mongodb.net/${databaseConfig.database}`)
+mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.password}@nodejstraining.4cyhs.mongodb.net/${databaseConfig.database}?retryWrites=true&w=majority`, { useNewUrlParser: true }, { useUnifiedTopology: true })
 
 const ItemSchemas = require('./app/schemas/items');
-const items = require('./app/schemas/items');
 
 const Items = JSON.parse(
     fs.readFileSync(`${__dirname}/app/_data/items.json`,'utf-8')
@@ -23,7 +22,7 @@ const Items = JSON.parse(
 const importData = async () => {
     try {
         await ItemSchemas.create(Items)
-        console.log('importData...'.bgCyan);
+        console.log('importData...');
         process.exit();
     } catch (error) {
         console.log(error);
@@ -33,7 +32,7 @@ const importData = async () => {
 const deleteData = async () => {
     try {
         await ItemSchemas.deleteMany({})
-        console.log('deleteData...'.bgCyan);
+        console.log('deleteData...');
         process.exit();
     } catch (error) {
         console.log(error);
@@ -42,6 +41,9 @@ const deleteData = async () => {
 
 if(process.argv[2] === '-i'){
     importData();
+    console.log(process.argv[2])
 }else if(process.argv[2] === '-d'){
-    deleteData();
+     deleteData();
+    console.log(process.argv[2])
+
 }
