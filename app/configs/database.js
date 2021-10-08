@@ -1,7 +1,8 @@
 
 module.exports = {
-    username: 'project',
-    password: 'vanduy',
-    database: 'api_project',
-    col_items: 'items'
+    username: 'thanhthoa',
+    password: 'thoa123',
+    database: 'shops',
+    col_items: "items",
+    
 };

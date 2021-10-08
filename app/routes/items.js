@@ -1,16 +1,18 @@
 var express         = require('express');
-var router          = express.Router();
-
-
+var itemsRouter          = express.Router();
+const { body } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 const controllerName = 'items';
-const MainModel 	= require(__path_models + controllerName);
-const MainValidate	= require(__path_validates + controllerName);
+const MainModel 	= require("../models/items");
 
 
-router.get('/', async (req,res, next) => {
+itemsRouter.get('/', async (req,res, next) => {
+        let params = []; 
+        params.sortField = req.query.orderBy; 
+        params.sortType = req.query.orderDir; 
 
-        const data = await MainModel.listItems(req.query , {'task' : 'all'})
+        const data = await MainModel.listItems(params , {'task' : 'all'})
         res.status(200).json({
             success : true,
             count : data.length,
@@ -18,7 +20,7 @@ router.get('/', async (req,res, next) => {
         })
 });
 
-router.get('/:id',async (req,res, next) => {
+itemsRouter.get('/:id',async (req,res, next) => {
         const data = await MainModel.listItems({'id' : req.params.id} , {'task' : 'one'})
         res.status(200).json({
             success : true,
@@ -26,29 +28,34 @@ router.get('/:id',async (req,res, next) => {
         })
 })
 
-router.post('/add', async (req,res, next) => {
-    let err = await validateReq(req,res, next);
-    if(!err){
-        const data = await MainModel.create(req.body);
+itemsRouter.post('/add', 
+check('name').notEmpty(),
+async (req,res, next) => {
+    const result = validationResult(req);
+    console.log(result.array());
+    if (!result.isEmpty()) {
+        return res.status(400).json({ errors: result.array() });
+      }
+
+    const data = await MainModel.create(req.body);
         res.status(201).json({
             success : true,
             data : data
         })
-    }
+    
 })
 
-router.put('/edit/:id',async (req,res, next) => {
-    let err = await validateReq(req,res, next);
-    if(!err){
+itemsRouter.put('/edit/:id',async (req,res, next) => {
+ 
         const data = await MainModel.editItem({'id' : req.params.id,'body' : req.body} , {'task' : 'edit'})
         res.status(200).json({
             success : true,
             data : data
         })
-    }
-})
+    
+});
 
-router.delete('/delete/:id',async (req,res, next) => {
+itemsRouter.delete('/delete/:id',async (req,res, next) => {
         const data = await MainModel.deleteItem({'id' : req.params.id} , {'task' : 'one'})
         res.status(200).json({
             success : true,
@@ -56,6 +63,8 @@ router.delete('/delete/:id',async (req,res, next) => {
         })
 })
 
-module.exports = router;
+module.exports = {
+    itemsRouter
+}
 
 

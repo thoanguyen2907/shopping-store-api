@@ -1,6 +1,13 @@
 var express = require('express');
-var router = express.Router();
 
-router.use('/items',require('./items'));
+const { itemsRouter } = require('./items');
 
-module.exports = router;
+
+const rootRouter = express.Router();
+
+rootRouter.use("/items", itemsRouter); 
+
+
+module.exports = {
+    rootRouter
+};
