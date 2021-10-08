@@ -1,6 +1,6 @@
 var express         = require('express');
 var itemsRouter          = express.Router();
-const { body } = require('express-validator');
+const {checkName, checkDescription, showErrors}     = require("../validates/items");
 const { check, validationResult } = require('express-validator');
 
 const controllerName = 'items';
@@ -29,29 +29,58 @@ itemsRouter.get('/:id',async (req,res, next) => {
 })
 
 itemsRouter.post('/add', 
-check('name').notEmpty(),
+// check('name').notEmpty().withMessage("Name is not empty"),
+checkName(),
+checkDescription(),
 async (req,res, next) => {
-    const result = validationResult(req);
-    console.log(result.array());
-    if (!result.isEmpty()) {
-        return res.status(400).json({ errors: result.array() });
-      }
-
-    const data = await MainModel.create(req.body);
-        res.status(201).json({
-            success : true,
-            data : data
-        })
+    try {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            const errors = result.array(); 
+           let messages = showErrors(errors);         
+            res.status(400).json({
+                success : false,
+                data : messages
+            });
+            return;         
+          }
+        const data = await MainModel.create(req.body);
+            res.status(201).json({
+                success : true,
+                data : data
+            })
+    } catch(error) {
+        console.log(error)
+    }
+    
     
 })
 
-itemsRouter.put('/edit/:id',async (req,res, next) => {
- 
-        const data = await MainModel.editItem({'id' : req.params.id,'body' : req.body} , {'task' : 'edit'})
-        res.status(200).json({
-            success : true,
-            data : data
-        })
+itemsRouter.put('/edit/:id',
+checkName(),
+checkDescription(),
+async (req,res, next) => {
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+        const errors = result.array(); 
+       let messages = showErrors(errors);         
+        res.status(400).json({
+            success : false,
+            data : messages
+        });
+        return;         
+      }
+ try {
+    const data = await MainModel.editItem({'id' : req.params.id,'body' : req.body} , {'task' : 'edit'})
+    res.status(200).json({
+        success : true,
+        data : data
+    })
+
+ } catch(error) {
+     console.log(error)
+ }
+       
     
 });
 
