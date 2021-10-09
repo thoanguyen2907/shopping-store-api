@@ -1,4 +1,4 @@
-const MainModel 	= require("../schemas/items");
+const MainModel 	= require("../schemas/careers");
 
 module.exports = {
     listItems : (params,option) => {
@@ -59,6 +59,17 @@ module.exports = {
                 .deleteOne({id : params.id})
         }
     },
+    event :  (params,option) => { 
+        if(option.task == "like") {
+            return MainModel.findByIdAndUpdate(params.id,{like: params.like}, {new: true})
+        }
+           
+        if(option.task == "dislike") 
+            return MainModel.findByIdAndUpdate(params.id,{dislike: params.dislike}, {new: true})
+        }
+        
+    
+,
     editItem : (params,option) => { 
         if(option.task == 'edit'){
             return MainModel

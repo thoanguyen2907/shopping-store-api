@@ -1,10 +1,10 @@
 var express         = require('express');
 var itemsRouter          = express.Router();
-const {checkName, checkDescription, showErrors}     = require("../validates/items");
+const {checkName, checkDescription, showErrors}     = require("../validates/careers");
 const { check, validationResult } = require('express-validator');
 
-const controllerName = 'items';
-const MainModel 	= require("../models/items");
+const controllerName = 'careers';
+const MainModel 	= require("../models/careers");
 
 
 itemsRouter.get('/', async (req,res, next) => {
@@ -83,6 +83,24 @@ async (req,res, next) => {
        
     
 });
+
+careersRouter.put('/like/:id',async (req,res, next) => {
+        const career = await MainModel.listItems({'id': req.params.id} , {'task' : 'one'}); 
+        const data = await MainModel.event({'id' : req.params.id,'like' : career.like +1} , {'task' : 'like'})
+        res.status(200).json({
+            success : true,
+            data : data
+        })
+    });
+
+careersRouter.put('/dislike/:id',async (req,res, next) => {
+        const career = await MainModel.listItems({'id': req.params.id} , {'task' : 'one'}); 
+        const data = await MainModel.event({'id' : req.params.id,'dislike' : career.like +1} , {'task' : 'dislike'})
+        res.status(200).json({
+            success : true,
+            data : data
+        })
+    })
 
 itemsRouter.delete('/delete/:id',async (req,res, next) => {
         const data = await MainModel.deleteItem({'id' : req.params.id} , {'task' : 'one'})
