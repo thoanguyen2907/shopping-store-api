@@ -3,13 +3,14 @@ const databaseConfig = require("../configs/database");
 const {Schema} = require('mongoose');
 
 var schema = new mongoose.Schema({ 
-	_id: String,
+	_id				: String,
     name 		    : String,
 	title 			: String,
 	like		    : Number,
 	dislike			: Number,
 	
 });
+
 schema.virtual('restaurants', {
 	ref: 'items', //The Model to use
 	localField: '_id', //Find in Model, where localField 

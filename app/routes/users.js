@@ -1,6 +1,6 @@
 var express         = require('express');
 var usersRouter          = express.Router();
-const {checkName, checkDescription, showErrors}     = require("../validates/careers");
+const {checkUsername, checkEmail, checkRole, checkPassword, showErrors}     = require("../validates/users");
 const { check, validationResult } = require('express-validator');
 
 const controllerName = 'users';
@@ -29,15 +29,17 @@ usersRouter.get('/:id',async (req,res, next) => {
 })
 
 usersRouter.post('/add', 
-// check('name').notEmpty().withMessage("Name is not empty"),
-checkName(),
-checkDescription(),
+checkUsername(),
+checkRole(),
+checkPassword(),
+checkEmail(),
 async (req,res, next) => {
     try {
-        const result = validationResult(req);
+        const result = await validationResult(req);
         if (!result.isEmpty()) {
             const errors = result.array(); 
-           let messages = showErrors(errors);         
+           let messages = await showErrors(errors);     
+           console.log(messages);    
             res.status(400).json({
                 success : false,
                 data : messages
@@ -55,8 +57,9 @@ async (req,res, next) => {
 })
 
 usersRouter.put('/edit/:id',
-checkName(),
-checkDescription(),
+checkUsername(),
+checkEmail(),
+checkPassword(),
 async (req,res, next) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
@@ -117,7 +120,7 @@ usersRouter.delete('/delete/:id',async (req,res, next) => {
 })
 
 module.exports = {
-    careersRouter
+    usersRouter
 }
 
 
