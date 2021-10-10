@@ -15,7 +15,7 @@ mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.pass
 
 const ItemSchemas = require('./app/schemas/items');
 const CareerSchemas = require('./app/schemas/careers');
-const UserSchemas = require('./app/schemas/user');
+const UserSchemas = require('./app/schemas/users');
 
 const Items = JSON.parse(
     fs.readFileSync(`${__dirname}/app/_data/items.json`,'utf-8')
@@ -24,10 +24,15 @@ const Careers = JSON.parse(
     fs.readFileSync(`${__dirname}/app/_data/careers.json`,'utf-8')
 )
 
+const Users = JSON.parse(
+    fs.readFileSync(`${__dirname}/app/_data/users.json`,'utf-8')
+)
+
 const importData = async () => {
     try {
         await ItemSchemas.create(Items);
         await CareerSchemas.create(Careers);
+        await UserSchemas.create(Users);
         console.log('importData...');
         process.exit();
     } catch (error) {
@@ -39,6 +44,7 @@ const deleteData = async () => {
     try {
         await ItemSchemas.deleteMany({});
         await CareerSchemas.deleteMany({})
+        await UserSchemas.deleteMany({})
         console.log('deleteData...');
         process.exit();
     } catch (error) {

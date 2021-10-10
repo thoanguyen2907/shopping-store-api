@@ -47,7 +47,7 @@ module.exports = {
         if(option.task == 'one'){
             return MainModel
                 .findById(params.id)
-                .select('id name status')
+                .select()
         }
     },
     create : (item) => {
