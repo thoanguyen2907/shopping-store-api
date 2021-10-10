@@ -5,5 +5,6 @@ module.exports = {
     database: 'shops',
     col_items: "items",
     col_careers: "careers",
+    col_users: "users",
     
 };

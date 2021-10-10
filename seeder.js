@@ -15,6 +15,7 @@ mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.pass
 
 const ItemSchemas = require('./app/schemas/items');
 const CareerSchemas = require('./app/schemas/careers');
+const UserSchemas = require('./app/schemas/user');
 
 const Items = JSON.parse(
     fs.readFileSync(`${__dirname}/app/_data/items.json`,'utf-8')
