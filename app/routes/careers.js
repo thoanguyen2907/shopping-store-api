@@ -1,5 +1,5 @@
 var express         = require('express');
-var itemsRouter          = express.Router();
+var careersRouter          = express.Router();
 const {checkName, checkDescription, showErrors}     = require("../validates/careers");
 const { check, validationResult } = require('express-validator');
 
@@ -7,7 +7,7 @@ const controllerName = 'careers';
 const MainModel 	= require("../models/careers");
 
 
-itemsRouter.get('/', async (req,res, next) => {
+careersRouter.get('/', async (req,res, next) => {
         // let params = []; 
         // params.sortField = req.query.orderBy; 
         // params.sortType = req.query.orderDir; 
@@ -20,7 +20,7 @@ itemsRouter.get('/', async (req,res, next) => {
         })
 });
 
-itemsRouter.get('/:id',async (req,res, next) => {
+careersRouter.get('/:id',async (req,res, next) => {
         const data = await MainModel.listItems({'id' : req.params.id} , {'task' : 'one'})
         res.status(200).json({
             success : true,
@@ -28,7 +28,7 @@ itemsRouter.get('/:id',async (req,res, next) => {
         })
 })
 
-itemsRouter.post('/add', 
+careersRouter.post('/add', 
 // check('name').notEmpty().withMessage("Name is not empty"),
 checkName(),
 checkDescription(),
@@ -51,12 +51,10 @@ async (req,res, next) => {
             })
     } catch(error) {
         console.log(error)
-    }
-    
-    
+    }  
 })
 
-itemsRouter.put('/edit/:id',
+careersRouter.put('/edit/:id',
 checkName(),
 checkDescription(),
 async (req,res, next) => {
@@ -110,7 +108,7 @@ careersRouter.put('/event/:type/:id',async (req,res, next) => {
 //         })
 //     })
 
-itemsRouter.delete('/delete/:id',async (req,res, next) => {
+careersRouter.delete('/delete/:id',async (req,res, next) => {
         const data = await MainModel.deleteItem({'id' : req.params.id} , {'task' : 'one'})
         res.status(200).json({
             success : true,
@@ -119,7 +117,7 @@ itemsRouter.delete('/delete/:id',async (req,res, next) => {
 })
 
 module.exports = {
-    itemsRouter
+    careersRouter
 }
 
 

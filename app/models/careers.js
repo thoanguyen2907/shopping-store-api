@@ -40,6 +40,7 @@ module.exports = {
         if(option.task == 'all'){
             return MainModel
                 .find(find)
+                .populate({path: 'restaurants', select: 'name'})
                 .select(select)
                 .sort(sort)
                
@@ -75,8 +76,6 @@ module.exports = {
         }
     },
         
-    
-,
     editItem : (params,option) => { 
         if(option.task == 'edit'){
             return MainModel
