@@ -60,13 +60,20 @@ module.exports = {
         }
     },
     event :  (params,option) => { 
-        if(option.task == "like") {
-            return MainModel.findByIdAndUpdate(params.id,{like: params.like}, {new: true})
-        }
+        // if(option.task == "like") {
+        //     return MainModel.findByIdAndUpdate(params.id,{like: params.like}, {new: true})
+        // }
            
-        if(option.task == "dislike") 
-            return MainModel.findByIdAndUpdate(params.id,{dislike: params.dislike}, {new: true})
+        // if(option.task == "dislike") 
+        //     return MainModel.findByIdAndUpdate(params.id,{dislike: params.dislike}, {new: true})
+        // }
+        let type = params.type; 
+        if(type != 'like' && type != 'dislike') {
+            return;
+        } else {
+            return MainModel.findByIdAndUpdate(params.id, {$inc: {[type]: 1}}, {new: true }); 
         }
+    },
         
     
 ,
