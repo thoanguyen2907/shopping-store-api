@@ -4,9 +4,7 @@ const {checkUsername, checkEmail, checkRole, checkPassword, showErrors}     = re
 const { check, validationResult } = require('express-validator');
 
 const controllerName = 'auth';
-const MainModel 	= require("../models/users");
-
-
+const MainModel 	= require("../models/auth");
 
 authRouter.post('/register', 
 checkUsername(),
@@ -19,22 +17,49 @@ async (req,res, next) => {
         if (!result.isEmpty()) {
             const errors = result.array(); 
            let messages = await showErrors(errors);     
-           console.log(messages);    
+           
             res.status(400).json({
                 success : false,
                 data : messages
             });
             return;         
           }
-        const data = await MainModel.create(req.body);
+        const token = await MainModel.create(req.body);
             res.status(201).json({
                 success : true,
-                data : data
+                token
             })
     } catch(error) {
         console.log(error)
     }  
 });
+
+authRouter.post("/login",
+checkPassword(),
+checkEmail(),
+ async (req, res, next) => {
+    try {
+        const result = await validationResult(req);
+        if (!result.isEmpty()) {
+            const errors = result.array(); 
+           let messages = await showErrors(errors);     
+           
+            res.status(400).json({
+                success : false,
+                data : messages
+            });
+            return;         
+          }
+        // const token = await MainModel.create(req.body);
+        //     res.status(201).json({
+        //         success : true,
+        //         token
+        //     })
+        console.log("success")
+    } catch(error) {
+        console.log(error)
+    }
+})
 
 module.exports = {
     authRouter
