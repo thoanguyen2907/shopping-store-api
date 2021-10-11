@@ -50,12 +50,15 @@ module.exports = {
                 .select()
         }
     },
-    create : (item) => {
-        return new MainModel(item).save();
+    create : async (item) => {
+        //khi tạo urser, tạo token
+        const newUser = new MainModel(item).save();
+        const token   = await newUser.getSignedJwtToken();
+        return token
     },
-    deleteItem : (params,option) => { 
+    deleteItem : async (params,option) => { 
         if(option.task == 'one'){
-            return MainModel
+            return await MainModel
                 .deleteOne({id : params.id})
         }
     },

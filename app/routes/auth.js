@@ -35,27 +35,18 @@ async (req,res, next) => {
 });
 
 authRouter.post("/login",
-checkPassword(),
-checkEmail(),
+
  async (req, res, next) => {
     try {
-        const result = await validationResult(req);
-        if (!result.isEmpty()) {
-            const errors = result.array(); 
-           let messages = await showErrors(errors);     
-           
-            res.status(400).json({
-                success : false,
-                data : messages
-            });
-            return;         
-          }
-        // const token = await MainModel.create(req.body);
-        //     res.status(201).json({
-        //         success : true,
-        //         token
-        //     })
-        console.log("success")
+       
+        const token = await MainModel.login(req.body, res);
+        if(token) {
+            res.status(201).json({
+                success : true,
+                token
+            })
+        }   
+       
     } catch(error) {
         console.log(error)
     }
