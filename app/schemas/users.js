@@ -22,5 +22,19 @@ schema.methods.getSignedJwtToken = function () {
         expiresIn: 60 * 60 
     });
 }
+schema.statics.findByCredentials = async function(email, password){
+    let  err= ""; 
+    //check empty
+    if(!email || !password) return {err : "Email và Password không được rỗng !!!"}
+
+    //check email
+    const user = await this.findOne({email});
+    if(!user) return {err: "Email và Password không chính xác !!!"}
+
+    //check password
+    const isMatch = await bcrypt.compare(password, user.password); 
+    if(!isMatch)  return {err: "Email và Password không chính xác !!!"}
+    return {user}
+}
 
 module.exports = mongoose.model(databaseConfig.col_users, schema );

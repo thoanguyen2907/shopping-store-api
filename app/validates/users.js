@@ -26,7 +26,7 @@ module.exports = {
     checkPassword : () => {
         return check('password')
         .isLength({ min: options.password.min })
-        .withMessage(`Name is not empty and length must be greater than ${options.password.min}`)
+        .withMessage(`Password is not empty and length must be greater than ${options.password.min}`)
     },
 
     showErrors : async (errors) => {
