@@ -36,11 +36,12 @@ app.use('/api/v1/', rootRouter);
 // Local variable
 app.locals.systemConfig = systemConfig;
 app.listen(3000, async () => {
-mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.password}@nodejstraining.4cyhs.mongodb.net/${databaseConfig.database}?retryWrites=true&w=majority`, { useNewUrlParser: true }, { useUnifiedTopology: true })
+mongoose.connect(`mongodb+srv://${databaseConfig.username}:${databaseConfig.password}@nodejstraining.4cyhs.mongodb.net/${databaseConfig.database}?retryWrites=true&w=majority`)
   .then(()=> {
     console.log('Database connected');
   })
   .catch((error)=> {
+    console.log(error)
     console.log('Error connecting to database');
   });
 })
