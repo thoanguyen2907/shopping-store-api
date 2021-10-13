@@ -5,9 +5,9 @@ const { check, validationResult } = require('express-validator');
 
 const controllerName = 'items';
 const MainModel 	= require("../models/items");
+const {protect}      = require("../middleware/auth")
 
-
-itemsRouter.get('/', async (req,res, next) => {
+itemsRouter.get('/', protect, async (req,res, next) => {
         // let params = []; 
         // params.sortField = req.query.orderBy; 
         // params.sortType = req.query.orderDir; 
