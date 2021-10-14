@@ -13,8 +13,7 @@ if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")) 
 try {
     if(token ) {
         const decoded = await jwt.verify(token, JWT_SECRET );
-        console.log(decoded); 
-        //lưu user vào req 
+        //lưu user vào req , search user based on id 
         req.user = await UserModel.listItems({id: decoded.id}, {task: "one"});
         next(); 
     }
@@ -47,6 +46,7 @@ const authorize = (...roles) => {
 
     }
 }
+
 
 module.exports = {
     protect, 

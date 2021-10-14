@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 const databaseConfig = require("../configs/database");
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+var crypto = require("crypto"); 
+
 var {JWT_EXP, JWT_SECRET} = require("../configs/system"); 
 var schema = new mongoose.Schema({ 
     username:String,
     email: String,
     role: String,
-    password : String 
+    password : String,
+    resetPassToken : String,
+    resetPassTokenExp: String
 	
 });
 
@@ -22,6 +26,17 @@ schema.methods.getSignedJwtToken = function () {
         expiresIn: 60 * 60 
     });
 }
+
+schema.methods.resetPassword  = function () {
+    const resetToken    = crypto.randomBytes(20).toString("hex"); 
+    this.resetPassToken = crypto.createHash("sha256")
+                                .update(resetToken)
+                                .digest("hex");
+    this.resetPassTokenExp = Date.now() + 10 * 60 * 1000;     
+
+    return resetToken
+ }
+
 schema.statics.findByCredentials = async function(email, password){
     let  err= ""; 
     //check empty
