@@ -1,4 +1,6 @@
 const MainModel 	= require("../schemas/users");
+const mongoose = require('mongoose');
+
 
 module.exports = {
     create : async (item) => {
@@ -25,16 +27,13 @@ module.exports = {
      
     },
     forgotPassword: async (item) => { 
-        const user = await MainModel.findOne({email: item.email});  
-          
+        const user = await MainModel.findOne({email: item.email});          
         if(user) {
-
             const resetToken = await user.resetPassword(); 
-            console.log({user})
-        
-            await new MainModel(user).save(); 
 
-           return resetToken
+            console.log({user})
+            await user.save(); 
+            return resetToken
         } else {
             return false;
         }
