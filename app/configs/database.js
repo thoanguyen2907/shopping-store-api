@@ -8,4 +8,3 @@ module.exports = {
     col_users: "users",
     
 };
-//mongodb+srv://thanhthoa:thoa123@nodejstraining.4cyhs.mongodb.net/shops?retryWrites=true&w=majority

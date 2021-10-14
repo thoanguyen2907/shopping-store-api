@@ -14,8 +14,9 @@ try {
     if(token ) {
         const decoded = await jwt.verify(token, JWT_SECRET );
         console.log(decoded); 
+        //lưu user vào req 
         req.user = await UserModel.listItems({id: decoded.id}, {task: "one"});
-        console.log(req.user)
+        next(); 
     }
 
 } catch(error) {
@@ -34,6 +35,20 @@ if(!token ) {
 }
 }
 
+const authorize = (...roles) => {
+    return (req, res, next) => {
+        console.log(req.user.role);
+        if(!roles.includes(req.user.role)) {
+            return res.status(403).json({
+                messages: "You do not have authority !!!!"
+            }) 
+        }
+        next()
+
+    }
+}
+
 module.exports = {
-    protect
+    protect, 
+    authorize
 }

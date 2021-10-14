@@ -2,7 +2,7 @@ var express         = require('express');
 var authRouter          = express.Router();
 const {checkUsername, checkEmail, checkRole, checkPassword, showErrors}     = require("../validates/auth");
 const { check, validationResult } = require('express-validator');
-
+const {protect, authorize}      = require("../middleware/auth")
 const controllerName = 'auth';
 const MainModel 	= require("../models/auth");
 
@@ -36,23 +36,31 @@ async (req,res, next) => {
 });
 
 authRouter.post("/login",
-
  async (req, res, next) => {
     try {
        
         const token = await MainModel.login(req.body, res);
         if(token) {
-            // res.status(201).json({
-            //     success : true,
-            //     token
-            // })
             saveCookieResponse(res, 201, token)
-        }   
-       
+        }    
     } catch(error) {
         console.log(error)
     }
-})
+});
+
+authRouter.get("/me", protect, authorize("user"),
+ async (req, res, next) => {
+    try {
+        res.status(200).json({
+            success: true, 
+            user: req.user
+        })
+          
+    } catch(error) {
+        console.log(error)
+    }
+});
+
 
 module.exports = {
     authRouter
