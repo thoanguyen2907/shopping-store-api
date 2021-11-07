@@ -1,5 +1,6 @@
 const MainModel 	= require("../schemas/users");
 const mongoose = require('mongoose');
+const { sendEmail } = require("../utils/sendEmail");
 
 
 module.exports = {
@@ -34,11 +35,25 @@ module.exports = {
             //send reset token to user and save in database
             const resetToken = await user.resetPassword(); 
             await user.save(); 
+            //create reset URL 
+            const resetURL = `/api/v1/resetPassword/${resetToken}`; 
+            const message = `Access the link to change password : ${resetURL}`;
+            try {
+                await sendEmail({
+                    email: item.email, 
+                    subject: "Change Password",
+                    message
+                });
+                return "Please check your email !!!"
+            } catch(error) {
+                user.resetPassToken = undefined,
+                user.resetPassTokenExp = undefined,
+                await user.save();
+                return "Cannot send Email, please try again"
+            }
             
-            return resetToken
         } else {
             return false;
-        }
-        
+        }      
     }
 }
