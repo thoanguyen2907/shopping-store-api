@@ -1,4 +1,6 @@
 const MainModel 	= require("../schemas/users");
+const mongoose = require('mongoose');
+
 
 module.exports = {
     create : async (item) => {
@@ -23,5 +25,20 @@ module.exports = {
         }
         return await result.user.getSignedJwtToken()
      
+    },
+    forgotPassword: async (item) => { 
+        //find email of user in user model 
+        const user = await MainModel.findOne({email: item.email});      
+        // user exist     
+        if(user) {
+            //send reset token to user and save in database
+            const resetToken = await user.resetPassword(); 
+            await user.save(); 
+            
+            return resetToken
+        } else {
+            return false;
+        }
+        
     }
 }

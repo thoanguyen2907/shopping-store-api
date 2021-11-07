@@ -54,13 +54,30 @@ authRouter.get("/me", protect, authorize("user"),
         res.status(200).json({
             success: true, 
             user: req.user
-        })
-          
+        })         
     } catch(error) {
         console.log(error)
     }
 });
 
+authRouter.post("/forgotPassword",
+ async (req, res, next) => {
+     //in auth models , forgotPassword function return resetToken
+    const resetToken = await MainModel.forgotPassword(req.body); 
+
+    if(!resetToken) {
+        res.status(401).json({
+            success: true,
+            messages: "Email is not exists "
+        })
+    } else {
+        res.status(201).json({
+            success: true,
+            resetToken
+        })
+    }
+
+});
 
 module.exports = {
     authRouter
