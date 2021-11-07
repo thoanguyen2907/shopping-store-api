@@ -1,7 +1,7 @@
 const MainModel 	= require("../schemas/users");
 const mongoose = require('mongoose');
 const { sendEmail } = require("../utils/sendEmail");
-
+var crypto = require("crypto"); 
 
 module.exports = {
     create : async (item) => {
@@ -55,5 +55,23 @@ module.exports = {
         } else {
             return false;
         }      
+    },
+    resetPassword : async (item) => {
+        console.log(item);
+        const resetPassToken = crypto.createHash("sha256")
+                                .update(item.resetToken)
+                                .digest("hex");
+        
+        const user = await MainModel.findOne({
+            resetPassToken,
+            resetPassTokenExp : {$gt: Date.now()}
+        });
+        console.log(user) 
+        if(!user) return false;
+        user.password = await item.password; 
+        user.resetPassToken = undefined; 
+        user.resetPassTokenExp = undefined; 
+        await user.save();
+        return user
     }
 }
