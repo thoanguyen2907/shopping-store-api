@@ -64,7 +64,6 @@ authRouter.post("/forgotPassword",
  async (req, res, next) => {
      //in auth models , forgotPassword function return resetToken
     const result = await MainModel.forgotPassword(req.body); 
-
     if(!result) {
         res.status(401).json({
             success: true,
@@ -76,8 +75,27 @@ authRouter.post("/forgotPassword",
             data: result
         })
     }
-
 });
+
+authRouter.post("/resetPassword/:resetToken",
+ async (req, res, next) => {
+    const result = await MainModel.resetPassword({resetToken: req.params.resetToken, 
+    password: req.body.password
+    })
+    if(!result) {
+        res.status(401).json({
+            success: true,
+            messages: "The reset token is not available"
+        })
+    } else {
+        res.status(201).json({
+            success: true, 
+            result
+        })
+    }
+  
+});
+
 
 module.exports = {
     authRouter
