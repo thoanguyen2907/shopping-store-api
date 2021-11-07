@@ -62,6 +62,7 @@ authRouter.get("/me", protect, authorize("user"),
 
 authRouter.post("/forgotPassword",
  async (req, res, next) => {
+     //in auth models , forgotPassword function return resetToken
     const resetToken = await MainModel.forgotPassword(req.body); 
 
     if(!resetToken) {

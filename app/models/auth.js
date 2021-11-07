@@ -27,12 +27,14 @@ module.exports = {
      
     },
     forgotPassword: async (item) => { 
-        const user = await MainModel.findOne({email: item.email});          
+        //find email of user in user model 
+        const user = await MainModel.findOne({email: item.email});      
+        // user exist     
         if(user) {
+            //send reset token to user and save in database
             const resetToken = await user.resetPassword(); 
-
-            console.log({user})
             await user.save(); 
+            
             return resetToken
         } else {
             return false;

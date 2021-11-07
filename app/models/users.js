@@ -51,9 +51,11 @@ module.exports = {
         }
     },
     create : async (item) => {
-        //khi tạo urser, tạo token
-        const newUser = new MainModel(item).save();
+        //khi tạo user, tạo token
+        const newUser = await new MainModel(item).save();
+        
         const token   = await newUser.getSignedJwtToken();
+
         return token
     },
     deleteItem : async (params,option) => { 
