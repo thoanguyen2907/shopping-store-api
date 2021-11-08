@@ -96,6 +96,20 @@ authRouter.post("/resetPassword/:resetToken",
   
 });
 
+authRouter.get("/logout", protect, authorize("user"),  async (req, res, next) => {
+res.status(statusCode)
+.cookie('token', 'none', {
+    expires: new Date(
+        Date.now() + 30 * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true 
+})
+.json({
+    success: true, 
+})
+}
+);
+
 
 module.exports = {
     authRouter
