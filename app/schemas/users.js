@@ -17,19 +17,32 @@ var schema = new mongoose.Schema({
 
 schema.pre('save', function(next){
     if(!this.isModified('password')) {
-        next()
+        next(); 
     };
     let salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(this.password, salt);
     next(); 
 });
 
+
 schema.methods.getSignedJwtToken = function () {
     //create token when sign register
    return jwt.sign({  id : this._id}, JWT_SECRET , {
         expiresIn: 60 * 60 
-    });
-    
+    });  
+}
+
+schema.methods.updateNew = async function (userNew) {
+
+  const isMatch = await bcrypt.compare(userNew.password, this.password); 
+  console.log(isMatch);
+  if(!isMatch) {
+    const salt = bcrypt.genSaltSync(10);
+    userNew.password = await bcrypt.hashSync(userNew.password, salt); 
+    return userNew
+  } 
+  userNew.password = this.password; 
+  return userNew
 }
 
 schema.methods.resetPassword  = function () {
