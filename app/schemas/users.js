@@ -34,7 +34,7 @@ schema.methods.getSignedJwtToken = function () {
 
 schema.methods.resetPassword  = function () {
     const resetToken    = crypto.randomBytes(20).toString("hex"); 
-    //create pass token for object user
+    //create pass token for object user and update reset token in user
     this.resetPassToken = crypto.createHash("sha256")
                                 .update(resetToken)
                                 .digest("hex");
