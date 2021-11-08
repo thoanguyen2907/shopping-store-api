@@ -2,12 +2,12 @@ var express         = require('express');
 var usersRouter          = express.Router();
 const {checkUsername, checkEmail, checkRole, checkPassword, showErrors}     = require("../validates/users");
 const { check, validationResult } = require('express-validator');
+const {protect, authorize}      = require("../middleware/auth")
 
-const controllerName = 'users';
 const MainModel 	= require("../models/users");
 
 
-usersRouter.get('/', async (req,res, next) => {
+usersRouter.get('/', protect, async (req,res, next) => {
         // let params = []; 
         // params.sortField = req.query.orderBy; 
         // params.sortType = req.query.orderDir; 
@@ -20,7 +20,7 @@ usersRouter.get('/', async (req,res, next) => {
         })
 });
 
-usersRouter.get('/:id',async (req,res, next) => {
+usersRouter.get('/:id', protect, async (req,res, next) => {
         const data = await MainModel.listItems({'id' : req.params.id} , {'task' : 'one'})
         res.status(200).json({
             success : true,

@@ -15,7 +15,6 @@ module.exports = {
         //   const removeFields = ['select', 'sort', 'page', 'limit'];
 
         //   removeFields.forEach(param => delete queryFind[param]); 
-          console.log(queryFind)
 
         // create query string
         let queryStr = JSON.stringify(queryFind); 
@@ -64,10 +63,12 @@ module.exports = {
                 .deleteOne({id : params.id})
         }
     },
-    editItem : (params,option) => { 
+    editItem : async (params,option) => { 
         if(option.task == 'edit'){
-            return MainModel
-                .updateOne({id : params.id},params.body)
+            const user = await MainModel.findById(params.id); 
+            const userNew = await user.updateNew(params.body); 
+            await MainModel.updateOne({_id : params.id}, userNew)
+            return userNew
         }
     }, 
 }
